@@ -26,4 +26,4 @@ CREATE TABLE reservation (
 );
 
 ALTER TABLE RESERVATION ADD CONSTRAINT fk_reservation_employee FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(id);
-ALTER TABLE RESERVATION ADD CONSTRAINT uq_reservation_date_time UNIQUE (r_date, r_time);
+ALTER TABLE RESERVATION ADD CONSTRAINT uq_reservation_date_time UNIQUE (reservation_date, reservation_time);
