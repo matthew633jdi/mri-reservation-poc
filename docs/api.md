@@ -34,13 +34,13 @@ Content-Type: application/json
 ## Response
 ```http request
 201 Created
+Location: /employees/1
 
 {
   "id": 1,
   "emrId": "EMR00123",
   "name": "홍길동",
-  "role": "STAFF",
-  "createdAt": "2025-01-01T10:30:00"
+  "role": "STAFF"
 }
 ```
 ### Fields
@@ -50,7 +50,6 @@ Content-Type: application/json
 | emrId     | String   | EMR 직원 ID |
 | name      | String   | 직원 이름     |
 | role      | String   | 권한 역할     |
-| createdAt | DateTime | 계정 생성 시각  |
 
 ### Error Responses
 1. emrId 중복
