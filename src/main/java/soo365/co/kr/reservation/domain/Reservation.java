@@ -28,6 +28,10 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TreatmentStatus treatmentStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Department department;
+
     private Long chartNumber;
 
     private String patientName;
@@ -42,17 +46,18 @@ public class Reservation extends BaseEntity {
     @Lob
     private String memo;
 
-    private Reservation(Employee employee, LocalDateTime reservationAt, Long chartNumber, String patientName) {
+    private Reservation(Employee employee, LocalDateTime reservationAt, Long chartNumber, String patientName, Department department) {
         this.employee = employee;
         this.reservationAt = reservationAt;
         this.contrastUsed = false;  // 설계를 위한 조치
         this.chartNumber = chartNumber;
         this.patientName = patientName;
         this.reservationStatus = ReservationStatus.BOOKED;
+        this.department = department;
     }
 
-    public static Reservation create(Employee employee, LocalDateTime reservationAt, Long chartNumber, String patientName) {
-        return new Reservation(employee, reservationAt, chartNumber, patientName);
+    public static Reservation create(Employee employee, LocalDateTime reservationAt, Long chartNumber, String patientName, Department department) {
+        return new Reservation(employee, reservationAt, chartNumber, patientName, department);
     }
 
     public void useContrast() {
@@ -69,6 +74,14 @@ public class Reservation extends BaseEntity {
             throw new IllegalStateException("이미 취소된 예약입니다.");
         }
         this.reservationStatus = status;
+    }
+
+    public void changeDepartment(Department department) {
+        this.department = department;
+    }
+
+    public void updateMemo(String memo) {
+        this.memo = (memo == null || memo.isBlank()) ? null : memo;
     }
 
 
