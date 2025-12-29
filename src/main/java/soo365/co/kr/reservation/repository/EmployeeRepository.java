@@ -6,5 +6,8 @@ import soo365.co.kr.reservation.domain.Employee;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, CustomEmployeeRepository {
-    Optional<Employee> findByEmployeeId(Long employeeId);
+    Optional<Employee> findByEmrId(String emrId);
+
+    Optional<Long> findIdByEmrId(String emrId);
+
 }

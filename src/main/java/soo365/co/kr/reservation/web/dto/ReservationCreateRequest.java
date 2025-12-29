@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public record ReservationCreateRequest(
         @NotBlank
-        Long employeeId,
+        String emrId,
 
         @NotNull
         @FutureOrPresent

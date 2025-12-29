@@ -6,7 +6,7 @@ import soo365.co.kr.reservation.domain.TreatmentStatus;
 import java.time.LocalDateTime;
 
 public record CreateReservationCommand(
-        Long employeeId,
+        String emrId,
         LocalDateTime reservationAt,
         Long chartNumber,
         String patientName,

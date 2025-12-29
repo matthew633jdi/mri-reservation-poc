@@ -43,7 +43,7 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private boolean contrastUsed;
 
-    @Lob
+    @Column(length = 5000)
     private String memo;
 
     private Reservation(Employee employee, LocalDateTime reservationAt, Long chartNumber, String patientName, Department department) {
