@@ -25,7 +25,6 @@ public class EmployeeService {
         return EmployeeResponse.from(employee);
     }
 
-    //TODO SQL unique 제약에 대한 예외 처리
     public Page<EmployeeResponse> find(EmployeeSearchCondition request, Pageable pageable) {
         return employeeRepository.search(request, pageable).map(EmployeeResponse::from);
     }

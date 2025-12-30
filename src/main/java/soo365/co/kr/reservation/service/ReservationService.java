@@ -1,12 +1,15 @@
 package soo365.co.kr.reservation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soo365.co.kr.reservation.domain.Employee;
 import soo365.co.kr.reservation.domain.Reservation;
+import soo365.co.kr.reservation.domain.exception.employee.EmployeeNotFoundException;
+import soo365.co.kr.reservation.domain.exception.reservation.DuplicateReservationException;
 import soo365.co.kr.reservation.repository.EmployeeRepository;
 import soo365.co.kr.reservation.repository.ReservationRepository;
 import soo365.co.kr.reservation.service.dto.CreateReservationCommand;
@@ -23,24 +26,29 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse createReservation(CreateReservationCommand command) {
-        Employee employee = employeeRepository.findByEmrId(command.emrId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직원입니다."));
-        Reservation reservation = Reservation.create(
-                employee,
-                command.reservationAt(),
-                command.chartNumber(),
-                command.patientName(),
-                command.department()
-        );
-        reservation.changeTreatmentStatus(command.treatmentStatus());
-        reservation.updateDirection(command.direction());
-        reservation.updateBodyPart(command.bodyPart());
-        if (command.contrastUsed()) {
-            reservation.useContrast();
+        try {
+
+            Employee employee = employeeRepository.findByEmrId(command.emrId())
+                    .orElseThrow(() -> new EmployeeNotFoundException(command.emrId()));
+            Reservation reservation = Reservation.create(
+                    employee,
+                    command.reservationAt(),
+                    command.chartNumber(),
+                    command.patientName(),
+                    command.department()
+            );
+            reservation.changeTreatmentStatus(command.treatmentStatus());
+            reservation.updateDirection(command.direction());
+            reservation.updateBodyPart(command.bodyPart());
+            if (command.contrastUsed()) {
+                reservation.useContrast();
+            }
+            reservation.updateMemo(command.memo());
+            reservationRepository.save(reservation);
+            return ReservationResponse.from(reservation);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateReservationException(command.reservationAt());
         }
-        reservation.updateMemo(command.memo());
-        reservationRepository.save(reservation);
-        return ReservationResponse.from(reservation);
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +56,7 @@ public class ReservationService {
         Long employeeId = null;
         if (command.emrId() != null) {
             employeeId = employeeRepository.findIdByEmrId(command.emrId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직원입니다."));
+                    .orElseThrow(() -> new EmployeeNotFoundException(command.emrId()));
         }
         SearchReservationQuery query = new SearchReservationQuery(
                 employeeId,

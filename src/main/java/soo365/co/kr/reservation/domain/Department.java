@@ -1,6 +1,7 @@
 package soo365.co.kr.reservation.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import soo365.co.kr.reservation.web.exception.InvalidEnumValueException;
 
 public enum Department {
     OS1,
@@ -11,6 +12,18 @@ public enum Department {
 
     @JsonCreator
     public static Department from(String value) {
-        return Department.valueOf(value.toUpperCase());
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Department.valueOf(value.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidEnumValueException(
+                    "department",
+                    value,
+                    Department.class
+            );
+        }
     }
 }

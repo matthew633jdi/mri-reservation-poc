@@ -1,4 +1,4 @@
-package soo365.co.kr.reservation.web;
+package soo365.co.kr.reservation.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

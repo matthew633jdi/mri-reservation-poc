@@ -17,6 +17,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
 
